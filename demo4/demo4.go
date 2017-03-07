@@ -49,9 +49,21 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 	if function == "read" {
 		return t.read(stub, args)
 	}
+
+	if function == "read2" {
+		return t.read2(stub, args)
+	}
+
 	fmt.Println("query did not find func: " + function)
 
 	return nil, errors.New("received unknow function" + function)
+}
+
+func (t *SimpleChaincode) read2(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	key := args[0]
+	result := []byte("helloworld" + key)
+	var err error
+	return result, err
 }
 
 func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {

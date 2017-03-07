@@ -38,6 +38,8 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		return t.Init(stub, "init", args)
 	} else if function == "write" {
 		return t.write(stub, args)
+	} else if function == "write2" {
+		return t.write2(stub, args)
 	}
 	fmt.Println("invoke did not find func:" + function)
 
@@ -101,6 +103,21 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 	}
 
 	return valAsbytes, nil
+}
+
+func (t *SimpleChaincode) write2(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	if len(args) != 2 {
+		return nil, errors.New("Incorrect number of arguments. Expecting 2")
+	}
+	key := args[0]
+	value := args[1]
+	value = "*****" + value + "*****"
+
+	err := stub.PutState(key, []byte(value))
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
 }
 
 func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {

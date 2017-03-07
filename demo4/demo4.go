@@ -74,6 +74,11 @@ func (t *SimpleChaincode) read3(stub shim.ChaincodeStubInterface) ([]byte, error
 	return result, nil
 }
 
+func (t *SimpleChaincode) readValueOfHelloworld(stub shim.ChaincodeStubInterface) ([]byte, error) {
+	result, error := stub.GetState("hello_world")
+	return result, error
+}
+
 func (t *SimpleChaincode) helloworld() ([]byte, error) {
 	result := []byte("hello world")
 	return result, nil

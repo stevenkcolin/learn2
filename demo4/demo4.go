@@ -11,6 +11,7 @@ type SimpleChaincode struct {
 }
 
 func main() {
+
 	err := shim.Start(new(SimpleChaincode))
 	if err != nil {
 		fmt.Printf("Error starting Simple chaincode: %s", err)
@@ -64,6 +65,11 @@ func (t *SimpleChaincode) read2(stub shim.ChaincodeStubInterface, args []string)
 	result := []byte("helloworld" + key)
 	var err error
 	return result, err
+}
+
+func (t *SimpleChaincode) read3(stub shim.ChaincodeStubInterface) ([]byte, error) {
+	result := []byte(stub.GetTxID())
+	return result, nil
 }
 
 func (t *SimpleChaincode) helloworld() ([]byte, error) {

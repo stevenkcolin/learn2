@@ -53,6 +53,8 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		return t.read2(stub, args)
 	case "read3":
 		return t.read3(stub)
+	case "readValueOfHelloworld":
+		return t.readValueOfHelloworld(stub)
 	case "helloworld":
 		return t.helloworld()
 	default:

@@ -70,7 +70,7 @@ func (t *SimpleChaincode) read2(stub shim.ChaincodeStubInterface, args []string)
 }
 
 func (t *SimpleChaincode) read3(stub shim.ChaincodeStubInterface) ([]byte, error) {
-	result := []byte(stub.GetTxID())
+	result := []byte("****" + stub.GetTxID() + "*****")
 	return result, nil
 }
 

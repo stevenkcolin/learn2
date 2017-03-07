@@ -46,21 +46,30 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("query is running " + function)
 
-	if function == "read" {
+	// old code @20170307
+	// if function == "read" {
+	// 	return t.read(stub, args)
+	// }
+	//
+	// if function == "read2" {
+	// 	return t.read2(stub, args)
+	// }
+	//
+	// if function == "helloworld" {
+	// 	return t.helloworld()
+	// }
+
+	switch function {
+	case "read":
 		return t.read(stub, args)
-	}
-
-	if function == "read2" {
+	case "read2":
 		return t.read2(stub, args)
-	}
-
-	if function == "helloworld" {
+	case "helloworld":
 		return t.helloworld()
+	default:
+		fmt.Println("query did not find func: " + function)
 	}
-
-	fmt.Println("query did not find func: " + function)
-
-	return nil, errors.New("received unknow function" + function)
+	return nil, errors.New("received unknow function: " + function)
 }
 
 func (t *SimpleChaincode) read2(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {

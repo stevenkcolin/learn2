@@ -110,6 +110,16 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		}
 		return result, err
 
+	case "getBinding":
+		if len(args) != 0 {
+			return nil, errors.New("incorrect args")
+		}
+		result, err := stub.GetBinding()
+		if err != nil {
+			return nil, errors.New("Failed in function getBinding")
+		}
+		return result, err
+
 	}
 	return nil, nil
 }

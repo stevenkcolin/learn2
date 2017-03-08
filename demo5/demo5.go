@@ -110,9 +110,8 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 			return nil, errors.New("Failed in function getCallerMetadata")
 		}
 		fmt.Println(result)
-		// return result, err
-		return []byte("getCallerMetadata"), err
-
+		return result, err
+		// return []byte("getCallerMetadata"), err
 	case "getBinding":
 		if len(args) != 0 {
 			return nil, errors.New("incorrect args")
@@ -123,8 +122,8 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 			return nil, errors.New("Failed in function getBinding")
 		}
 		fmt.Println(result)
-		// return result, err
-		return []byte("getBinding"), err
+		return result, err
+		// return []byte("getBinding"), err
 	case "getPayload":
 		if len(args) != 0 {
 			return nil, errors.New("incorrect args")
@@ -135,8 +134,8 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 			return nil, errors.New("Failed in function getPayload")
 		}
 		fmt.Println(result)
-		// return result, err
-		return []byte("getPayload"), err
+		return result, err
+		// return []byte("getPayload"), err
 	}
 
 	return nil, nil

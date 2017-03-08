@@ -86,23 +86,28 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		result, err := stub.GetState(key)
 
 		if err != nil {
-			return nil, err
+			return nil, errors.New("Failed in function getState")
 		}
 		return result, err
 	case "getCallerMetadata":
+		if len(args) != 0 {
+			return nil, errors.New("incorrect args")
+		}
 		result, err := stub.GetCallerMetadata()
 		if err != nil {
-			return nil, err
+			return nil, errors.New("Failed in function getCallerMetadata")
 		}
 		return result, err
 
 	case "getCallerCert":
+		if len(args) != 0 {
+			return nil, errors.New("incorrect args")
+		}
 		result, err := stub.GetCallerCertificate()
 		if err != nil {
-			return nil, err
+			return nil, errors.New("Failed in function getCallerCert")
 		}
 		return result, err
-
 	}
 	return nil, nil
 }

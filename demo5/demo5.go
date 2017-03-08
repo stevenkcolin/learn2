@@ -55,16 +55,6 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 			return nil, errors.New("Failed creating AssetsOnwership table.")
 		}
 		return nil, nil
-
-	case "getCallerMetadata":
-		if len(args) != 0 {
-			return nil, errors.New("incorrect args")
-		}
-		result, err := stub.GetCallerMetadata()
-		if err != nil {
-			return nil, errors.New("Failed in function getCallerMetadata")
-		}
-		return result, err
 	}
 
 	return nil, nil
@@ -109,6 +99,17 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 			return nil, errors.New("Failed in function getCallerCert")
 		}
 		return result, err
+
+	case "getCallerMetadata":
+		if len(args) != 0 {
+			return nil, errors.New("incorrect args")
+		}
+		result, err := stub.GetCallerMetadata()
+		if err != nil {
+			return nil, errors.New("Failed in function getCallerMetadata")
+		}
+		return result, err
+
 	}
 	return nil, nil
 }

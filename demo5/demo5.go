@@ -31,7 +31,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 		return nil, errors.New("invalid admin certificate. Empty")
 	}
 	stub.PutState("admin", adminCert)
-	return nil, nil
+	return adminCert, nil
 }
 
 func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {

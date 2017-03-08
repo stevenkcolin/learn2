@@ -24,5 +24,15 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 }
 
 func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
+	switch function {
+	case "getTxID":
+		txID := stub.GetTxID()
+		result := []byte(txID)
+		return result, nil
+	case "getTxTimestamp":
+		time, err := stub.GetTxTimestamp()
+		result := []byte(time.String()) //时间转换为字符串，time.String()
+		return result, err
+	}
 	return nil, nil
 }

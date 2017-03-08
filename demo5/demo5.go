@@ -33,6 +33,14 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		time, err := stub.GetTxTimestamp()
 		result := []byte(time.String()) //时间转换为字符串，time.String()
 		return result, err
+	case "getStringArgs":
+		strList := stub.GetStringArgs()
+		var result string
+		for index := 0; index < len(strList); index++ {
+			result += "***" + strList[index] + "***"
+		}
+		return []byte(result), nil
+
 	}
 	return nil, nil
 }

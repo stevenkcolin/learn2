@@ -34,6 +34,17 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 			return nil, err
 		}
 		return value, err
+	case "delState":
+		if len(args) != 1 {
+			return nil, errors.New("incorrect args")
+		}
+		key := args[0]
+		err := stub.DelState(key)
+		if err != nil {
+			return nil, err
+		}
+		result := key + "has been deleted"
+		return []byte(result), err
 	}
 
 	return nil, nil

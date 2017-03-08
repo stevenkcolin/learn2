@@ -1,6 +1,8 @@
 package main
 
 import (
+	"errors"
+
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
@@ -40,7 +42,21 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 			result += "***" + strList[index] + "***"
 		}
 		return []byte(result), nil
-
+	case "putState":
+		if len(args) != 2 {
+			return nil, errors.New("incorrect args")
+		}
+		key := args[0]
+		value := []byte(args[1])
+		err := stub.PutState(key, value)
+		return nil, err
+	case "getState":
+		if len(args) != 1 {
+			return nil, errors.New("incorrect args")
+		}
+		key := args[0]
+		result, err := stub.GetState(key)
+		return result, err
 	}
 	return nil, nil
 }

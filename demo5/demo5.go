@@ -22,6 +22,20 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 }
 
 func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
+	switch function {
+	case "putState":
+		if len(args) != 2 {
+			return nil, errors.New("incorrect args")
+		}
+		key := args[0]
+		value := []byte(args[1])
+		err := stub.PutState(key, value)
+		if err != nil {
+			return nil, err
+		}
+		return value, err
+	}
+
 	return nil, nil
 }
 
@@ -42,20 +56,17 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 			result += "***" + strList[index] + "***"
 		}
 		return []byte(result), nil
-	case "putState":
-		if len(args) != 2 {
-			return nil, errors.New("incorrect args")
-		}
-		key := args[0]
-		value := []byte(args[1])
-		err := stub.PutState(key, value)
-		return nil, err
+
 	case "getState":
 		if len(args) != 1 {
 			return nil, errors.New("incorrect args")
 		}
 		key := args[0]
 		result, err := stub.GetState(key)
+
+		if err != nil {
+			return nil, err
+		}
 		return result, err
 	}
 	return nil, nil

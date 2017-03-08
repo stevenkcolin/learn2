@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
@@ -108,18 +109,35 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		if err != nil {
 			return nil, errors.New("Failed in function getCallerMetadata")
 		}
-		return result, err
+		fmt.Println(result)
+		// return result, err
+		return []byte("getCallerMetadata"), err
 
 	case "getBinding":
 		if len(args) != 0 {
 			return nil, errors.New("incorrect args")
 		}
 		result, err := stub.GetBinding()
+
 		if err != nil {
 			return nil, errors.New("Failed in function getBinding")
 		}
-		return result, err
+		fmt.Println(result)
+		// return result, err
+		return []byte("getBinding"), err
+	case "getPayload":
+		if len(args) != 0 {
+			return nil, errors.New("incorrect args")
+		}
+		result, err := stub.GetPayload()
 
+		if err != nil {
+			return nil, errors.New("Failed in function getPayload")
+		}
+		fmt.Println(result)
+		// return result, err
+		return []byte("getPayload"), err
 	}
+
 	return nil, nil
 }

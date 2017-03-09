@@ -199,10 +199,10 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 			return nil, errors.New("incorrect args")
 		}
 		asset := args[0]
-		owner := []byte(args[1])
+		owner := args[1]
 
 		col1 := shim.Column{Value: &shim.Column_String_{String_: asset}}
-		col2 := shim.Column{Value: &shim.Column_Bytes{Bytes: owner}}
+		col2 := shim.Column{Value: &shim.Column_String_{String_: owner}}
 		// var columns []shim.Column
 		// columns = append(columns, col1)
 		// columns = append(columns, col2)
@@ -211,7 +211,7 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		// val1 := columns[1].GetString_()
 		// result := asset + "********" + string(owner) + "*****end of input ****"
 		// result += col1.GetString_() + "****" + col2.GetString_()
-		result := col1.GetString_() + "****" + string(col2.GetBytes())
+		result := col1.GetString_() + "****" + col2.GetString_()
 		return []byte(result), nil
 	}
 

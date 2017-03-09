@@ -1,9 +1,9 @@
 package main
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
+	"strconv"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
@@ -226,7 +226,7 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		}
 		columns = append(columns, col0)
 
-		rowChannel, err := stub.GetRows("AssetsOwnership", columns)
+		rowChannel, _ := stub.GetRows("AssetsOwnership", columns)
 		var rows []shim.Row
 		for {
 			select {
@@ -241,11 +241,13 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 				break
 			}
 		}
-		jsonRows, err := json.Marshal(rows)
-		if err != nil {
-			return nil, fmt.Errorf("getRowsTableTwo operation failed. Error marshaling JSON: %s", err)
-		}
-		return jsonRows, nil //end of function getRows()
+		// jsonRows, err := json.Marshal(rows)
+		// if err != nil {
+		// 	return nil, fmt.Errorf("getRowsTableTwo operation failed. Error marshaling JSON: %s", err)
+		// }
+
+		result := strconv.Itoa(len(rows))
+		return []byte(result), nil //end of function getRows()
 	}
 
 	return nil, nil

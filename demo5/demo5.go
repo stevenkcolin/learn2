@@ -23,14 +23,14 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	if len(args) != 0 {
 		return nil, errors.New("incorrect args")
 	}
-	adminCert, err := stub.GetCallerMetadata()
-	if err != nil {
-		return nil, errors.New("failed getting metadata")
-	}
-	if len(adminCert) == 0 {
-		return nil, errors.New("invalid admin certificate. Empty")
-	}
-	stub.PutState("admin", adminCert)
+	// adminCert, err := stub.GetCallerMetadata()
+	// if err != nil {
+	// 	return nil, errors.New("failed getting metadata")
+	// }
+	// if len(adminCert) == 0 {
+	// 	return nil, errors.New("invalid admin certificate. Empty")
+	// }
+	stub.PutState("admin", []byte("hahahahaha"))
 	return nil, nil
 }
 

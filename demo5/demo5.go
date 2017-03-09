@@ -232,8 +232,23 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		rowChannel, _ := stub.GetRows("AssetsOwnership", columns)
 
 		var rows []shim.Row
-		row, _ := <-rowChannel
-		rows = append(rows, row)
+		for {
+			row, ok := <-rowChannel
+			val0 := row.Columns[0].GetString_()
+			val1 := row.Columns[1].GetString_()
+			fmt.Printf("val0 is: %v, val1 is: %v", val0, val1)
+			if !ok {
+				rowChannel = nil
+			} else {
+				rows = append(rows, row)
+			}
+			if rowChannel == nil {
+				break
+			}
+		}
+
+		// row, _ := <-rowChannel
+		// rows = append(rows, row)
 
 		result := strconv.Itoa(len(rows))
 		fmt.Printf("the length of rows is: %v\n", result)

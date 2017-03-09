@@ -220,30 +220,33 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		if len(args) != 1 {
 			return nil, errors.New("incorrect args")
 		}
+		// asset := args[0]
+		// fmt.Printf("value of args[0] is: %v\n", asset)
+		// var columns []shim.Column
+		// col0 := shim.Column{
+		// 	Value: &shim.Column_String_{String_: asset},
+		// }
+		// columns = append(columns, col0)
+		// fmt.Printf("value of column[0] is %v\n", columns[0].GetString_())
+
 		asset := args[0]
-		fmt.Printf("value of args[0] is: %v\n", asset)
 		var columns []shim.Column
-		col0 := shim.Column{
-			Value: &shim.Column_String_{String_: asset},
-		}
-		columns = append(columns, col0)
-		fmt.Printf("value of column[0] is %v\n", columns[0].GetString_())
+		col1 := shim.Column{Value: &shim.Column_String_{String_: asset}}
+		columns = append(columns, col1)
 
 		rowChannel, _ := stub.GetRows("AssetsOwnership", columns)
-
 		var rows []shim.Row
 
-		row := <-rowChannel
-		val0 := row.Columns[0].GetString_()
-		val1 := row.Columns[1].GetString_()
-		fmt.Printf("val0 is: %v, val1 is: %v", val0, val1)
-		rows = append(rows, row)
-
-		row = <-rowChannel
-		val0 = row.Columns[0].GetString_()
-		val1 = row.Columns[1].GetString_()
-		fmt.Printf("val0 is: %v, val1 is: %v", val0, val1)
-		rows = append(rows, row)
+		for {
+			select {
+			case row := <-rowChannel:
+				rows = append(rows, row)
+				fmt.Println("tick tok")
+			}
+			if rowChannel == nil {
+				break
+			}
+		}
 
 		// for i := 0; i < 10; i++ {
 		// 	select {

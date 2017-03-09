@@ -232,10 +232,7 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		rowChannel, _ := stub.GetRows("AssetsOwnership", columns)
 
 		var rows []shim.Row
-		for row, err := range <-rowChannel {
-			if err != nil {
-				fmt.Printf("there is an error %v", err)
-			}
+		for row := range rowChannel {
 			val0 := row.Columns[0].GetString_()
 			val1 := row.Columns[1].GetString_()
 			fmt.Printf("val0 is: %v, val1 is: %v", val0, val1)

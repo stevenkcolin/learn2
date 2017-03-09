@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"strconv"
@@ -230,31 +229,14 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		columns = append(columns, col0)
 		fmt.Printf("value of column[0] is %v\n", columns[0].GetString_())
 
-		jsonColumns, _ := json.Marshal(columns)
-		fmt.Printf("value of columns is: %v\n", []byte(jsonColumns))
-
 		rowChannel, _ := stub.GetRows("AssetsOwnership", columns)
 
 		var rows []shim.Row
-		for {
-			select {
-			case row, ok := <-rowChannel:
-				if !ok {
-					rowChannel = nil
-				} else {
-					rows = append(rows, row)
-				}
-			}
-			if rowChannel == nil {
-				break
-			}
-		}
-		// jsonRows, err := json.Marshal(rows)
-		// if err != nil {
-		// 	return nil, fmt.Errorf("getRowsTableTwo operation failed. Error marshaling JSON: %s", err)
-		// }
+		row, _ := <-rowChannel
+		rows = append(rows, row)
 
 		result := strconv.Itoa(len(rows))
+		fmt.Printf("the length of rows is: %v\n", result)
 		return []byte(result), nil //end of function getRows()
 	}
 

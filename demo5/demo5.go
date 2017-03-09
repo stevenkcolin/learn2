@@ -233,19 +233,37 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 
 		var rows []shim.Row
 		for {
-			row, ok := <-rowChannel
-			val0 := row.Columns[0].GetString_()
-			val1 := row.Columns[1].GetString_()
-			fmt.Printf("val0 is: %v, val1 is: %v", val0, val1)
-			if !ok {
-				rowChannel = nil
-			} else {
-				rows = append(rows, row)
+			select {
+			case row, ok := <-rowChannel:
+				if !ok {
+					rowChannel = nil
+				} else {
+					val0 := row.Columns[0].GetString_()
+					val1 := row.Columns[1].GetString_()
+					fmt.Printf("val0 is: %v, val1 is: %v", val0, val1)
+					rows = append(rows, row)
+				}
 			}
 			if rowChannel == nil {
 				break
 			}
 		}
+
+		// var rows []shim.Row
+		// for {
+		// 	row, ok := <-rowChannel
+		// 	val0 := row.Columns[0].GetString_()
+		// 	val1 := row.Columns[1].GetString_()
+		// 	fmt.Printf("val0 is: %v, val1 is: %v", val0, val1)
+		// 	if !ok {
+		// 		rowChannel = nil
+		// 	} else {
+		// 		rows = append(rows, row)
+		// 	}
+		// 	if rowChannel == nil {
+		// 		break
+		// 	}
+		// }
 
 		// row, _ := <-rowChannel
 		// rows = append(rows, row)

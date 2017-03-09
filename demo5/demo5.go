@@ -198,12 +198,10 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		if len(args) != 2 {
 			return nil, errors.New("incorrect args")
 		}
-		// asset := args[0]
+		asset := args[0]
 		owner := []byte(args[1])
 
-		// col1 := shim.Column{Value: &shim.Column_String_{String_: asset}}
-		// col2 := shim.Column{Value: &shim.Column_Bytes{Bytes: owner}}
-
+		col1 := shim.Column{Value: &shim.Column_String_{String_: asset}}
 		col2 := shim.Column{Value: &shim.Column_Bytes{Bytes: owner}}
 		// var columns []shim.Column
 		// columns = append(columns, col1)
@@ -213,7 +211,7 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		// val1 := columns[1].GetString_()
 		// result := asset + "********" + string(owner) + "*****end of input ****"
 		// result += col1.GetString_() + "****" + col2.GetString_()
-		result := string(col2.GetBytes())
+		result := string(col1.GetBytes()) + "****" + string(col2.GetBytes())
 		return []byte(result), nil
 	}
 

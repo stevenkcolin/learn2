@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 
@@ -211,6 +212,34 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		val1 := columns[1].GetString_()
 		result := val0 + "****" + val1
 		return []byte(result), nil
+
+	case "getRows":
+		var columns []shim.Column
+		col0 := shim.Column{
+			Value: &shim.Column_String_{},
+		}
+		columns = append(columns, col0)
+
+		rowChannel, err := stub.GetRows("AssetsOwnership", columns)
+		var rows []shim.Row
+		for {
+			select {
+			case row, ok := <-rowChannel:
+				if !ok {
+					rowChannel = nil
+				} else {
+					rows = append(rows, row)
+				}
+			}
+			if rowChannel == nil {
+				break
+			}
+		}
+		jsonRows, err := json.Marshal(rows)
+		if err != nil {
+			return nil, fmt.Errorf("getRowsTableTwo operation failed. Error marshaling JSON: %s", err)
+		}
+		return jsonRows, nil //end of function getRows()
 	}
 
 	return nil, nil

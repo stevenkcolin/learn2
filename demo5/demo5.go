@@ -172,6 +172,9 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		return result, err
 	// return []byte("getPayload"), err
 	case "getRow":
+		fmt.Println("*********************")
+		fmt.Println("*********************")
+		fmt.Println("*********************")
 		if len(args) != 1 {
 			return nil, errors.New("incorrect args")
 		}

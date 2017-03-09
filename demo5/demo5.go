@@ -228,12 +228,13 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 			Value: &shim.Column_String_{String_: asset},
 		}
 		columns = append(columns, col0)
+		fmt.Printf("value of column[0] is %v\n", columns[0].GetString_())
+
 		jsonColumns, _ := json.Marshal(columns)
-		fmt.Printf("value of columns is: %v\n", jsonColumns)
+		fmt.Printf("value of columns is: %v\n", []byte(jsonColumns))
 
 		rowChannel, _ := stub.GetRows("AssetsOwnership", columns)
 
-		fmt.Printf("value of rowChannel is: %v\n", rowChannel)
 		var rows []shim.Row
 		for {
 			select {

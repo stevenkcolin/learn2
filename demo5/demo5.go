@@ -214,9 +214,13 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		return []byte(result), nil
 
 	case "getRows":
+		if len(args) != 1 {
+			return nil, errors.New("incorrect args")
+		}
+		asset := args[0]
 		var columns []shim.Column
 		col0 := shim.Column{
-			Value: &shim.Column_String_{},
+			Value: &shim.Column_String_{String_: asset},
 		}
 		columns = append(columns, col0)
 

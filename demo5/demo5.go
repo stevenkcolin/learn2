@@ -33,7 +33,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	stub.PutState("admin", []byte("hahahahaha"))
 	err := stub.CreateTable("AssetsOwnership", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "Asset", Type: shim.ColumnDefinition_STRING, Key: true},
-		&shim.ColumnDefinition{Name: "Owner", Type: shim.ColumnDefinition_BYTES, Key: false},
+		&shim.ColumnDefinition{Name: "Owner", Type: shim.ColumnDefinition_STRING, Key: false},
 	})
 	if err != nil {
 		return nil, errors.New("Failed creating AssetsOnwership table.")
@@ -69,7 +69,7 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 	case "createTable":
 		err := stub.CreateTable("AssetsOwnership", []*shim.ColumnDefinition{
 			&shim.ColumnDefinition{Name: "Asset", Type: shim.ColumnDefinition_STRING, Key: true},
-			&shim.ColumnDefinition{Name: "Owner", Type: shim.ColumnDefinition_BYTES, Key: false},
+			&shim.ColumnDefinition{Name: "Owner", Type: shim.ColumnDefinition_STRING, Key: false},
 		})
 		if err != nil {
 			return nil, errors.New("Failed creating AssetsOnwership table.")
@@ -81,11 +81,11 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 			return nil, errors.New("incorrect args")
 		}
 		asset := args[0]
-		owner := []byte(args[1])
+		owner := args[1]
 		row := shim.Row{
 			Columns: []*shim.Column{
 				&shim.Column{Value: &shim.Column_String_{String_: asset}},
-				&shim.Column{Value: &shim.Column_Bytes{Bytes: owner}}}}
+				&shim.Column{Value: &shim.Column_String_{String_: owner}}}}
 		ok, err := stub.InsertRow("AssetsOwnership", row)
 		if !ok && err == nil {
 			return nil, errors.New("asset was already assigned")

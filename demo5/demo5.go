@@ -211,7 +211,7 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		// val1 := columns[1].GetString_()
 		// result := asset + "********" + string(owner) + "*****end of input ****"
 		// result += col1.GetString_() + "****" + col2.GetString_()
-		result := string(col1.GetBytes()) + "****" + string(col2.GetBytes())
+		result := col1.GetString_() + "****" + string(col2.GetBytes())
 		return []byte(result), nil
 	}
 

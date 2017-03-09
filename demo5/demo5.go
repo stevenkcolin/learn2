@@ -31,6 +31,13 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	// 	return nil, errors.New("invalid admin certificate. Empty")
 	// }
 	stub.PutState("admin", []byte("hahahahaha"))
+	err := stub.CreateTable("AssetsOwnership", []*shim.ColumnDefinition{
+		&shim.ColumnDefinition{Name: "Asset", Type: shim.ColumnDefinition_STRING, Key: true},
+		&shim.ColumnDefinition{Name: "Owner", Type: shim.ColumnDefinition_BYTES, Key: false},
+	})
+	if err != nil {
+		return nil, errors.New("Failed creating AssetsOnwership table.")
+	}
 	return nil, nil
 }
 

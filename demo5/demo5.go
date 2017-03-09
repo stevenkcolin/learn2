@@ -84,26 +84,8 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 			return nil, errors.New("asset was already assigned")
 		}
 		return nil, nil
-	case "getRow":
-		if len(args) != 1 {
-			return nil, errors.New("incorrect args")
-		}
-		asset := args[0]
-		var columns []shim.Column
-		col1 := shim.Column{Value: &shim.Column_String_{String_: asset}}
-		columns = append(columns, col1)
 
-		row, err := stub.GetRow("AssetsOwnership", columns)
-		if err != nil {
-			return nil, errors.New("failed in function getRow")
-		}
-
-		val0 := row.Columns[0].GetString_()
-		val1 := row.Columns[1].GetString_()
-		result := "****" + val0 + "****" + val1
-		return []byte(result), err
 	}
-
 	return nil, nil
 }
 
@@ -181,7 +163,26 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		}
 		fmt.Println(result)
 		return result, err
-		// return []byte("getPayload"), err
+	// return []byte("getPayload"), err
+	case "getRow":
+		if len(args) != 1 {
+			return nil, errors.New("incorrect args")
+		}
+		asset := args[0]
+		var columns []shim.Column
+		col1 := shim.Column{Value: &shim.Column_String_{String_: asset}}
+		columns = append(columns, col1)
+
+		row, err := stub.GetRow("AssetsOwnership", columns)
+		if err != nil {
+			return nil, errors.New("failed in function getRow")
+		}
+
+		val0 := row.Columns[0].GetString_()
+		val1 := row.Columns[1].GetString_()
+		result := "****" + val0 + "****" + val1
+		return []byte(result), err
+		//end of "getRow"
 	}
 
 	return nil, nil

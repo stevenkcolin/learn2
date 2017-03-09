@@ -201,17 +201,15 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		asset := args[0]
 		owner := args[1]
 
-		col1 := shim.Column{Value: &shim.Column_String_{String_: asset}}
-		col2 := shim.Column{Value: &shim.Column_String_{String_: owner}}
-		// var columns []shim.Column
-		// columns = append(columns, col1)
-		// columns = append(columns, col2)
+		col0 := shim.Column{Value: &shim.Column_String_{String_: asset}} //col0，type=shim.column
+		col1 := shim.Column{Value: &shim.Column_String_{String_: owner}} //col1, type=shim.column
+		var columns []shim.Column                                        //define columns=[]shim.column
+		columns = append(columns, col0)
+		columns = append(columns, col1) //完成columns的赋值
 
-		// val0 := columns[0].GetString_()
-		// val1 := columns[1].GetString_()
-		// result := asset + "********" + string(owner) + "*****end of input ****"
-		// result += col1.GetString_() + "****" + col2.GetString_()
-		result := col1.GetString_() + "****" + col2.GetString_()
+		val0 := columns[0].GetString_()
+		val1 := columns[1].GetString_()
+		result := val0 + "****" + val1
 		return []byte(result), nil
 	}
 

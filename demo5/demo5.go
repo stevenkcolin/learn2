@@ -232,22 +232,31 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		rowChannel, _ := stub.GetRows("AssetsOwnership", columns)
 
 		var rows []shim.Row
-		for {
-			select {
-			case row, ok := <-rowChannel:
-				if !ok {
-					rowChannel = nil
-				} else {
-					val0 := row.Columns[0].GetString_()
-					val1 := row.Columns[1].GetString_()
-					fmt.Printf("val0 is: %v, val1 is: %v", val0, val1)
-					rows = append(rows, row)
-				}
+		for row, err := range <-rowChannel {
+			if err != nil {
+				fmt.Printf("there is an error %v", err)
 			}
-			if rowChannel == nil {
-				break
-			}
+			val0 := row.Columns[0].GetString_()
+			val1 := row.Columns[1].GetString_()
+			fmt.Printf("val0 is: %v, val1 is: %v", val0, val1)
+			rows = append(rows, row)
 		}
+		// for {
+		// 	select {
+		// 	case row, ok := <-rowChannel:
+		// 		if ok == nil {
+		// 			rowChannel = nil
+		// 		} else {
+		// 			val0 := row.Columns[0].GetString_()
+		// 			val1 := row.Columns[1].GetString_()
+		// 			fmt.Printf("val0 is: %v, val1 is: %v", val0, val1)
+		// 			rows = append(rows, row)
+		// 		}
+		// 	}
+		// 	if rowChannel == nil {
+		// 		break
+		// 	}
+		// }
 
 		// var rows []shim.Row
 		// for {

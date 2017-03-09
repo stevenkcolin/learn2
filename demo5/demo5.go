@@ -90,7 +90,7 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		if !ok && err == nil {
 			return nil, errors.New("asset was already assigned")
 		}
-		return nil, nil
+		return nil, nil //end of insertTable
 
 	}
 	return nil, nil
@@ -192,7 +192,25 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		val1 := row.Columns[1].GetString_()
 		result := "****" + val0 + "****" + val1
 		return []byte(result), err
-		//end of "getRow"
+	//end of "getRow"
+
+	case "getRowDefinition":
+		if len(args) != 2 {
+			return nil, errors.New("incorrect args")
+		}
+		asset := args[0]
+		owner := []byte(args[1])
+
+		col1 := shim.Column{Value: &shim.Column_String_{String_: asset}}
+		col2 := shim.Column{Value: &shim.Column_Bytes{Bytes: owner}}
+		var columns []shim.Column
+		columns = append(columns, col1)
+		columns = append(columns, col2)
+
+		val0 := columns[0].GetString_()
+		val1 := columns[1].GetString_()
+		result := val0 + "********" + val1
+		return []byte(result), nil
 	}
 
 	return nil, nil

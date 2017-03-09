@@ -33,6 +33,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	// }
 	stub.PutState("admin", []byte("hahahahaha"))
 	stub.PutState("steve", []byte("welcome"))
+	stub.PutState("steve2", []byte("welcome2"))
 	err := stub.CreateTable("AssetsOwnership", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "Asset", Type: shim.ColumnDefinition_STRING, Key: true},
 		&shim.ColumnDefinition{Name: "Owner", Type: shim.ColumnDefinition_STRING, Key: false},

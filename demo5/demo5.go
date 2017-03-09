@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strconv"
@@ -216,17 +217,23 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		return []byte(result), nil
 
 	case "getRows":
+		fmt.Println("begin logs for getRows")
 		if len(args) != 1 {
 			return nil, errors.New("incorrect args")
 		}
 		asset := args[0]
+		fmt.Printf("value of args[0] is: %v\n", asset)
 		var columns []shim.Column
 		col0 := shim.Column{
 			Value: &shim.Column_String_{String_: asset},
 		}
 		columns = append(columns, col0)
+		jsonColumns, _ := json.Marshal(columns)
+		fmt.Printf("value of columns is: %v\n", jsonColumns)
 
 		rowChannel, _ := stub.GetRows("AssetsOwnership", columns)
+
+		fmt.Printf("value of rowChannel is: %v\n", rowChannel)
 		var rows []shim.Row
 		for {
 			select {

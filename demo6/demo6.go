@@ -27,6 +27,7 @@ var projectBenfiary string
 var projectState string
 var currentPrice float64
 var currentSummary int
+var userList []string
 
 //Init function
 //Step1: 获得调用init()的caller, 并且保存在"admin"中
@@ -110,6 +111,7 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 			if err != nil {
 				return nil, errors.New("errors in the amount")
 			}
+			userList = append(userList, user)
 			currentSummary += value
 
 			row := shim.Row{
@@ -186,6 +188,19 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		val1 := int(row.Columns[1].GetInt64())
 		result := "****" + val0 + "****" + strconv.Itoa(val1)
 		return []byte(result), err //end of function getRow()
+	case "getUserList":
+		if len(args) != 0 {
+			return nil, errors.New("incorrect args")
+		}
+		fmt.Println("started logging in function getUserList")
+
+		var result string
+		for userStr := range userList {
+			result += userStr + "***"
+		}
+
+		return []byte(result), nil //end of getUserList
+
 	}
 	return nil, nil
 }

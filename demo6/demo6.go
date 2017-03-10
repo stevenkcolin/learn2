@@ -4,13 +4,12 @@ import (
 	"fmt"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
-	"github.com/op/go-logging"
 )
 
 type SimpleChaincode struct {
 }
 
-var myLogger = logging.MustGetLogger("asset_mgm")
+// var myLogger = logging.MustGetLogger("asset_mgm")
 
 func main() {
 	fmt.Println("started logging in main()")

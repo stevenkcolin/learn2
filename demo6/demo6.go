@@ -195,12 +195,11 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		fmt.Println("started logging in function getUserList")
 
 		var result string
-		for userStr := range userList {
+		for _, userStr := range userList {
 			result += userStr + "***"
 		}
 
 		return []byte(result), nil //end of getUserList
-
 	}
 	return nil, nil
 }

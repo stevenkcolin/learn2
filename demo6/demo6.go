@@ -26,6 +26,7 @@ var projectPeriod, projectGoal, projectTimes int
 var projectBenfiary string
 var projectState string
 var currentPrice float64
+var currentSummary int
 
 //Init function
 //Step1: 获得调用init()的caller, 并且保存在"admin"中
@@ -62,7 +63,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	fmt.Println("started to create table: Shares")
 	tableErr := stub.CreateTable("Shares", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "User", Type: shim.ColumnDefinition_STRING, Key: true},
-		&shim.ColumnDefinition{Name: "Amount", Type: shim.ColumnDefinition_STRING, Key: false},
+		&shim.ColumnDefinition{Name: "Amount", Type: shim.ColumnDefinition_INT64, Key: false},
 	})
 	if tableErr != nil {
 		return nil, errors.New("Failed creating AssetsOnwership table.")
@@ -104,10 +105,18 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		if len(row.Columns) == 0 {
 			fmt.Println("columns 0")
 			fmt.Println("started to add a row")
+
+			value, err := strconv.Atoi(amount)
+			if err != nil {
+				return nil, errors.New("errors in the amount")
+			}
+			currentSummary += value
+
 			row := shim.Row{
 				Columns: []*shim.Column{
 					&shim.Column{Value: &shim.Column_String_{String_: user}},
-					&shim.Column{Value: &shim.Column_String_{String_: amount}}}}
+					&shim.Column{Value: &shim.Column_Int64{Int64: int64(value)}}}}
+
 			ok, err := stub.InsertRow("Shares", row)
 			if !ok && err == nil {
 				return nil, errors.New("shares was already assigned")
@@ -152,6 +161,7 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		result += strconv.Itoa(projectGoal) + "/"
 		result += strconv.Itoa(projectTimes) + "/"
 		result += projectBenfiary + "/"
+		result += strconv.Itoa(currentSummary) + "/"
 		result += projectState
 
 		return []byte(result), nil //end of function getProjectState

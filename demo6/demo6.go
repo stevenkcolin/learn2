@@ -31,7 +31,13 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 		return nil, errors.New("failed getting metadata")
 	}
 
-	stub.PutState("admin", adminCert)
+	if len(adminCert) == 0 {
+		return nil, errors.New("Invalid admin certificate. Empty.")
+	}
+
+	fmt.Printf("the administrator is [%v]", adminCert)
+
+	// stub.PutState("admin", adminCert)
 	return nil, nil
 }
 

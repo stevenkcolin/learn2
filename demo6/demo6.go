@@ -25,6 +25,7 @@ var projectRate int
 var projectPeriod, projectGoal, projectTimes int
 var projectBenfiary string
 var projectState string
+var currentPrice float64
 
 //Init function
 //Step1: 获得调用init()的caller, 并且保存在"admin"中
@@ -44,13 +45,28 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	stub.PutState("admin", adminCert)
 
 	//started to initialize project
+	fmt.Println("started to initialize project")
+	if len(args) != 5 {
+		return nil, errors.New("failed in args")
+	}
 	projectName = args[0]                    //项目名称
 	projectRate, _ = strconv.Atoi(args[1])   //项目年化利率
 	projectPeriod, _ = strconv.Atoi(args[2]) //项目天数
 	projectGoal, _ = strconv.Atoi(args[3])   //项目目标募集金额
 	projectTimes = 1                         //项目期数
 	projectBenfiary = args[4]                //项目受益人
-	projectState = "Draft"                   //项目当前状态
+	projectState = "draft"                   //项目当前状态
+	currentPrice = 1.0
+
+	//started to initialize the table: Shares
+	fmt.Println("started to create table: Shares")
+	tableErr := stub.CreateTable("Shares", []*shim.ColumnDefinition{
+		&shim.ColumnDefinition{Name: "User", Type: shim.ColumnDefinition_STRING, Key: true},
+		&shim.ColumnDefinition{Name: "Amount", Type: shim.ColumnDefinition_STRING, Key: false},
+	})
+	if tableErr != nil {
+		return nil, errors.New("Failed creating AssetsOnwership table.")
+	}
 
 	return nil, nil
 }
@@ -58,6 +74,12 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 // Invoke function
 func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("started logging in Invoke()")
+
+	switch function {
+	case "goPublic":
+		projectState = "public"
+		return []byte("public successfull"), nil
+	}
 
 	return nil, nil
 }

@@ -28,6 +28,7 @@ var projectState string
 var currentPrice float64
 var currentSummary int
 var userList []string
+var shareList map[string]int
 
 //Init function
 //Step1: 获得调用init()的caller, 并且保存在"admin"中

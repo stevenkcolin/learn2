@@ -25,17 +25,16 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	fmt.Println("started logging in Init()")
 
 	fmt.Println("started get caller's metatdat")
-	adminCert, err := stub.GetCallerMetadata()
+	// adminCert, _ := stub.GetCallerMetadata()
+	// fmt.Printf("the administrator is [%v]", adminCert)
 
-	if err != nil {
-		return nil, errors.New("failed getting metadata")
-	}
-
-	if len(adminCert) == 0 {
-		return nil, errors.New("Invalid admin certificate. Empty.")
-	}
-
-	fmt.Printf("the administrator is [%v]", adminCert)
+	// if err != nil {
+	// 	return nil, errors.New("failed getting metadata")
+	// }
+	//
+	// if len(adminCert) == 0 {
+	// 	return nil, errors.New("Invalid admin certificate. Empty.")
+	// }
 
 	// stub.PutState("admin", adminCert)
 	return nil, nil

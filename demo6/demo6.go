@@ -183,8 +183,8 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		}
 
 		val0 := row.Columns[0].GetString_()
-		val1 := row.Columns[1].GetString_()
-		result := "****" + val0 + "****" + val1
+		val1 := row.Columns[1].GetInt64()
+		result := "****" + val0 + "****" + strconv.Itoa(val1)
 		return []byte(result), err //end of function getRow()
 	}
 	return nil, nil

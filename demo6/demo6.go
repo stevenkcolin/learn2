@@ -89,33 +89,35 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		}
 		fmt.Println("started logging in pay()")
 		user := args[0]
-		// amount := args[1]
+		amount := args[1]
 
 		fmt.Println("step1: chechk whether table contains user")
 		var columns []shim.Column
 		col1 := shim.Column{Value: &shim.Column_String_{String_: user}}
 		columns = append(columns, col1)
 
-		row, err := stub.GetRow("AssetsOwnership", columns)
+		row, err := stub.GetRow("Shares", columns)
 		if err != nil {
 			return nil, errors.New("failed in function getRow")
 		}
 
 		if len(row.Columns) == 0 {
 			fmt.Println("columns 0")
+			fmt.Println("started to add a row")
+			row := shim.Row{
+				Columns: []*shim.Column{
+					&shim.Column{Value: &shim.Column_String_{String_: user}},
+					&shim.Column{Value: &shim.Column_String_{String_: amount}}}}
+			ok, err := stub.InsertRow("Shares", row)
+			if !ok && err == nil {
+				return nil, errors.New("shares was already assigned")
+			}
 		} else {
 			fmt.Println("columns not 0")
+			fmt.Println("todo we need to update")
 		}
 
-		// if row == nil {
-		// 	fmt.Println("nilnilnilnilnilnil")
-		// 	fmt.Println(user + "****" + amount)
-		// } else {
-		// 	fmt.Println("not nil")
-		// 	fmt.Println("not nil")
-		// }
 		return nil, nil //end of pay
-
 	}
 
 	return nil, nil
@@ -152,8 +154,28 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		result += projectBenfiary + "/"
 		result += projectState
 
-		return []byte(result), nil
+		return []byte(result), nil //end of function getProjectState
 
+	case "getRow":
+		if len(args) != 1 {
+			return nil, errors.New("incorrect args")
+		}
+		fmt.Println("started logging in function getRow()")
+
+		user := args[0]
+		var columns []shim.Column
+		col1 := shim.Column{Value: &shim.Column_String_{String_: user}}
+		columns = append(columns, col1)
+
+		row, err := stub.GetRow("Shares", columns)
+		if err != nil {
+			return nil, errors.New("failed in function getRow")
+		}
+
+		val0 := row.Columns[0].GetString_()
+		val1 := row.Columns[1].GetString_()
+		result := "****" + val0 + "****" + val1
+		return []byte(result), err //end of function getRow()
 	}
 	return nil, nil
 }

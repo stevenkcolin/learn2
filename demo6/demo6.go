@@ -82,7 +82,7 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		return result, err //end of getState
 	case "getProjectState":
 		fmt.Println("started in function getProjectState")
-		result += projectName + "/"
+		result := projectName + "/"
 		result += strconv.Itoa(projectRate) + "/"
 		result += strconv.Itoa(projectPeriod) + "/"
 		result += strconv.Itoa(projectGoal) + "/"
@@ -90,7 +90,7 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		result += projectBenfiary + "/"
 		result += projectState
 
-		return result, nil
+		return []byte(result), nil
 
 	}
 	return nil, nil

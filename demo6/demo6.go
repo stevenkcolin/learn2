@@ -22,7 +22,7 @@ func main() {
 
 func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("started logging in Init()")
-	myLogger.Debug("Init Chaincode...")
+	// myLogger.Debug("Init Chaincode...")
 	return nil, nil
 }
 

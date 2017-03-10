@@ -21,7 +21,7 @@ func main() {
 }
 
 var projectName string
-var projectRate float64
+var projectRate int
 var projectPeriod, projectGoal, projectTimes int
 var projectBenfiary string
 var projectState string
@@ -44,13 +44,13 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	stub.PutState("admin", adminCert)
 
 	//started to initialize project
-	projectName = args[0]                            //项目名称
-	projectRate, _ = strconv.ParseFloat(args[1], 64) //项目年化利率
-	projectPeriod, _ = strconv.Atoi(args[2])         //项目天数
-	projectGoal, _ = strconv.Atoi(args[3])           //项目目标募集金额
-	projectTimes = 1                                 //项目期数
-	projectBenfiary = args[4]                        //项目受益人
-	projectState = "Draft"                           //项目当前状态
+	projectName = args[0]                    //项目名称
+	projectRate, _ = strconv.Atoi(args[1])   //项目年化利率
+	projectPeriod, _ = strconv.Atoi(args[2]) //项目天数
+	projectGoal, _ = strconv.Atoi(args[3])   //项目目标募集金额
+	projectTimes = 1                         //项目期数
+	projectBenfiary = args[4]                //项目受益人
+	projectState = "Draft"                   //项目当前状态
 
 	return nil, nil
 }
@@ -83,10 +83,10 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 	case "getProjectState":
 		fmt.Println("started in function getProjectState")
 		result += projectName + "/"
-		result += string(projectRate) + "/"
-		result += string(projectPeriod) + "/"
-		result += string(projectGoal) + "/"
-		result += string(projectTimes) + "/"
+		result += strconv.Itoa(projectRate) + "/"
+		result += strconv.Itoa(projectPeriod) + "/"
+		result += strconv.Itoa(projectGoal) + "/"
+		result += strconv.Itoa(projectTimes) + "/"
 		result += projectBenfiary + "/"
 		result += projectState
 

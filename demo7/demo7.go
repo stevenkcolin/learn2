@@ -30,6 +30,7 @@ var currentPrice float64
 var projectSummary int
 var userList []string
 var shareList map[string]int
+var availableList map[string]int
 
 func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("started logging in Init()")
@@ -76,8 +77,28 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		}
 		projectState = "public"
 		return nil, nil //end of goPublic
+	case "pay":
+		fmt.Println("started logging in pay()")
+		//// TODO: write code for pay
+		return nil, nil
+	case "checkGoalReached":
+		fmt.Println("started logging in checkGoalReached()")
+		// TODO: write code for checkGoalReached
+		return nil, nil
+	case "checkDaoqi":
+		fmt.Println("started logging in checkDaoqi()")
+		// TODO: write code for checkDaoqi
+		return nil, nil
+	case "calculatePrice":
+		fmt.Println("started logging in calculatePrice")
+		return nil, nil
+	case "calculateResult":
+		fmt.Println("started logging in calculateResult")
+		return nil, nil
+	default:
+		fmt.Println("no function found")
+		return nil, errors.New("no function found, recheck your function name")
 	}
-	return nil, nil
 }
 
 func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
@@ -95,10 +116,21 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		result += strconv.Itoa(projectTimes) + "/"
 		result += projectBenifary + "/"
 		result += projectState + "/"
-		result += strconv.FormatFloat(currentPrice, 'E', -1, 64) + "/"
+		result += strconv.FormatFloat(currentPrice, '.', -1, 64) + "/"
 		result += strconv.Itoa(projectSummary) + "/"
 
 		return []byte(result), nil //end of getProjectState
+	case "getUserList":
+		fmt.Println("started logging in getUserList")
+		return nil, nil
+	case "getShareList":
+		fmt.Println("started logging in getShareList")
+		return nil, nil
+	case "getAvailableList":
+		fmt.Println("started logging in getAvailableList")
+		return nil, nil
+	default:
+		fmt.Println("no function found")
+		return nil, errors.New("no function found, recheck your function name")
 	}
-	return nil, nil
 }

@@ -98,11 +98,11 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		}
 
 		//step1 : get args
-		user := args[0]
-		amount, _ := strconv.Atoi(args[1])
-		if amount <= 0 {
-			return nil, errors.New("errors in args[1],it is negative")
-		}
+		// user := args[0]
+		// amount, _ := strconv.Atoi(args[1])
+		// if amount <= 0 {
+		// 	return nil, errors.New("errors in args[1],it is negative")
+		// }
 		fmt.Printf("user is %v and amount is %v", args[0], args[1])
 
 		//step2 : check if the userList[user] exist

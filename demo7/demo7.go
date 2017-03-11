@@ -116,6 +116,23 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 
 		projectSummary += amountInt
 		return nil, nil
+	case "autoPay":
+		fmt.Println("started logging in autoPay")
+		if isGoalReached() {
+			return nil, errors.New("goal has been reached")
+		}
+		if len(args) != 0 {
+			return nil, errors.New("failed in args")
+		}
+
+		gap := getGoalGap()
+		if gap != 0 {
+			fmt.Printf("admin pay,for user admin and value %v\n", gap)
+			shareList["admin"] = gap
+			projectSummary += gap
+		}
+
+		return nil, nil
 	case "checkGoalReached":
 		fmt.Println("started logging in checkGoalReached()")
 		// TODO: write code for checkGoalReached
@@ -188,7 +205,7 @@ func isOverGoal(amount int) bool {
 }
 
 func isGoalReached() bool {
-	if projectSummary == projectGoal {
+	if projectSummary >= projectGoal {
 		return true
 	} else {
 		return false

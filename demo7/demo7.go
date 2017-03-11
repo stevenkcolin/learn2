@@ -95,7 +95,7 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 	case "pay":
 		fmt.Println("started logging in pay()")
 		if !isPublic() {
-			return nil, errors.New("current state is not public, function pay() failed")
+			return []byte("error"), errors.New("current state is not public, function pay() failed")
 		}
 
 		if len(args) != 2 {
@@ -131,7 +131,6 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		fmt.Println("no function found")
 		return nil, errors.New("no function found")
 	}
-	// return nil, nil
 }
 
 // Query comment

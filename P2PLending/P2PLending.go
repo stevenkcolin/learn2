@@ -80,5 +80,15 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 //Query comment
 func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("started logging in Query()")
+	switch function {
+	case "getProjectName":
+		return []byte(projectName), nil
+	case "getProjectGoal":
+		result := strconv.Itoa(projectGoal)
+		return []byte(result), nil
+	case "getProjectSummary":
+		result := strconv.Itoa(projectSummary)
+		return []byte(result), nil
+	}
 	return nil, nil
 }

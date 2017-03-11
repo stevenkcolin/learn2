@@ -82,13 +82,42 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 	fmt.Println("started logging in Query()")
 	switch function {
 	case "getProjectName":
-		return []byte(projectName), nil
+		fmt.Println("started logging in func getProjectName")
+		return []byte(projectName), nil //end of func getProjectName()
 	case "getProjectGoal":
+		fmt.Println("started logging in func getProjectGoal")
 		result := strconv.Itoa(projectGoal)
-		return []byte(result), nil
+		return []byte(result), nil //end of func getProjectGoal()
 	case "getProjectSummary":
+		fmt.Println("started logging in func getProjectSummary")
 		result := strconv.Itoa(projectSummary)
-		return []byte(result), nil
+		return []byte(result), nil //end of func getProjectSummary()
+	case "getShareList":
+		fmt.Println("started logging in func getShareList")
+		var result string
+		for user, amount := range shareList {
+			result += "****" + user + "/" + strconv.Itoa(amount)
+		}
+		return []byte(result), nil //end of func getShareList
+
+	case "getProjectDeadline":
+		fmt.Println("started logging in func getProjectDeadline")
+		result := strconv.Itoa(int(projectDeadline))
+		return []byte(result), nil //end of func getProjectDeadline
+
+	case "getCurrentPrice":
+		fmt.Println("started logging in func getCurrentPrice")
+		result := strconv.FormatFloat(currentPrice, 'E', -5, 64)
+		return []byte(result), nil //end of func getCurrentPrice
+
+	case "getAvailableList":
+		fmt.Println("started logging in func getAvailableList")
+		var result string
+		for user, value := range availableList {
+			result += "****" + user + "/" + strconv.FormatFloat(value, 'E', -5, 64)
+		}
+		return []byte(result), nil //end of func getAvailableList
+
 	}
 	return nil, nil
 }

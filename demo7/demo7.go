@@ -11,14 +11,6 @@ import (
 type SimpleChaincode struct {
 }
 
-func main() {
-	fmt.Println("started logging in main()")
-	err := shim.Start(new(SimpleChaincode))
-	if err != nil {
-		fmt.Println("failed in function main()")
-	}
-}
-
 var projectName string
 var projectRate int
 var projectPeriod int
@@ -31,6 +23,14 @@ var projectSummary int
 var userList []string
 var shareList map[string]int
 var availableList map[string]int
+
+func main() {
+	fmt.Println("started logging in main()")
+	err := shim.Start(new(SimpleChaincode))
+	if err != nil {
+		fmt.Println("failed in function main()")
+	}
+}
 
 //Init comment
 func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {

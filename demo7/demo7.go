@@ -127,8 +127,11 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 	case "calculateResult":
 		fmt.Println("started logging in calculateResult")
 		return nil, nil
+	default:
+		fmt.Println("no function found")
+		return nil, errors.New("no function found")
 	}
-	return nil, nil
+	// return nil, nil
 }
 
 // Query comment

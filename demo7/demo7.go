@@ -151,9 +151,13 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		updateDeadline()
 		isProjectStarted = true
 		return nil, nil
-	case "checkDaoqi":
-		fmt.Println("started logging in checkDaoqi()")
-		// TODO: write code for checkDaoqi
+	case "checkDueDate":
+		fmt.Println("started logging in checkDueDate()")
+		if !isDueDate() {
+			return nil, errors.New("due date is wrong")
+		}
+
+		currentPrice += float64(projectRate * projectPeriod / 365)
 		return nil, nil
 	case "calculatePrice":
 		fmt.Println("started logging in calculatePrice")
@@ -199,6 +203,11 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 	case "getProjectDeadline":
 		fmt.Println("started logging in getProjectDeadline")
 		result := strconv.Itoa(int(projectDeadline))
+		return []byte(result), nil
+
+	case "getCurrentPrice":
+		fmt.Println("started logging in getCurrentPrice")
+		result := strconv.FormatFloat(currentPrice, 'E', -5, 64)
 		return []byte(result), nil
 	}
 	return nil, nil
@@ -248,4 +257,16 @@ func updateDeadline() {
 	day := projectPeriod
 	projectDeadline = time.Now().AddDate(0, 0, day).Unix()
 	fmt.Printf("deadline is %v\n", projectDeadline)
+}
+
+func isDueDate() bool {
+	// 正常代码，检查当前时间是否大于最后期限
+	// now := time.Now().Unix()
+	// if now >= projectDeadline {
+	// 	return true;
+	// } else {
+	// 	return false;
+	// }
+	//为了测试所用，永远返回true，
+	return true
 }

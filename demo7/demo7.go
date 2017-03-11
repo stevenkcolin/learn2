@@ -164,14 +164,14 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		fmt.Println("started logging in getShareList")
 
 		var result string
-		// var summary int
-		// for user, amount := range shareList {
-		// 	result += user + "****"
-		// 	summary += amount
-		// }
-		//
-		// fmt.Printf("the result is %v", result)
-		// fmt.Printf("the summary is %v", summary)
+		var summary int
+		for user, amount := range shareList {
+			result += user + "****"
+			summary += amount
+		}
+
+		fmt.Printf("the result is %v", result)
+		fmt.Printf("the summary is %v", summary)
 
 		return []byte(result), nil
 	case "getAvailableList":

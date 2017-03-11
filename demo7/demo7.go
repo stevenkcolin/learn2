@@ -98,7 +98,7 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		}
 		user := args[0]
 		amount := args[1]
-		fmt.Printf("user is %v and amount is %v", user, amount)
+		fmt.Printf("user is %v and amount is %v\n", user, amount)
 		amountInt, _ := strconv.Atoi(amount)
 		if amountInt <= 0 {
 			return nil, errors.New("amount is negative")
@@ -108,7 +108,7 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		// 	userList = append(userList, user)
 		// }
 		//
-		// shareList[user] += amountInt
+		shareList[user] += amountInt
 		projectSummary += amountInt
 		return nil, nil
 	case "checkGoalReached":

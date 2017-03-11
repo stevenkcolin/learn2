@@ -20,10 +20,9 @@ var projectBenifary string
 var projectState string
 var currentPrice float64
 var projectSummary int
-
 var userList []string
 
-// var shareList map[string]int
+var shareList map[string]int
 
 // var availableList map[string]int
 
@@ -42,7 +41,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	userList = append(userList, "hello1")
 	userList = append(userList, "welcome")
 
-	shareList := make(map[string]int)
+	shareList = make(map[string]int)
 	shareList["aaa"] = 111
 	shareList["bbb"] = 222
 

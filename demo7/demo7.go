@@ -40,6 +40,7 @@ func main() {
 //Init comment
 func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("started logging in Init()")
+	//started to initialize the ShareList & AvailableList
 	shareList = make(map[string]int)
 	availableList = make(map[string]float64)
 
@@ -88,6 +89,13 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 } //end of Init()
 
 // Invoke comment
+// It contains below functions
+// goPublic() set the state to public
+// pay() users could pay for the project
+// autoPay() if the gap to the project goal is less than 2%, it will be filled automatically
+// checkGoalReached() check whether the project goal is reached, if reached, started to count interest
+// checkDueDate() check whether the project is due to date, if it is due do date, then started to calculate the price
+// checkRepay() calculate the shareList[user] * currentPrice and saved to availableList
 func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("started logging in Invoke()")
 	switch function {
@@ -95,18 +103,20 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		fmt.Println("started logging in goPublic")
 		if len(args) != 0 {
 			return nil, errors.New("failed in args")
-		}
+		} //check the length of args
 		projectState = "public"
 		return nil, nil //end of goPublic
 	case "pay":
 		fmt.Println("started logging in pay()")
+		//check the project state
 		if !isPublic() {
 			return nil, errors.New("current state is not public, function pay() failed")
 		}
-
+		//check the length of args
 		if len(args) != 2 {
 			return nil, errors.New("failed in args")
 		}
+		//get the args[0] & args[1]
 		user := args[0]
 		amount := args[1]
 		fmt.Printf("user is %v and amount is %v\n", user, amount)

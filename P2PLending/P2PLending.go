@@ -74,10 +74,47 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 //Invoke comment
 func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("started logging in Invoke()")
+	switch function {
+	case "pay":
+		fmt.Println("started logging in func pay()")
+		//step1: check current state
+		if !isPublic() {
+			return nil, errors.New("current state is not public")
+		}
+		//step2: check len(args)==2
+		if len(args) != 2 {
+			return nil, errors.New("failed in args")
+		}
+		//step3: get user=args[0] and amount=args[1]
+		//validate the input data
+		user := args[0]
+		amount, err := strconv.Atoi(args[1])
+		if err != nil {
+			return nil, errors.New("errors in args[1]")
+		}
+		if amount <= 0 {
+			return nil, errors.New("amount is negative")
+		}
+		//step 4: check whether amount will be over the projectGoal
+		if isOverGoal(amount) {
+			return nil, errors.New("projctSummary + amount is over goal")
+		}
+		// step 5: putdata into shareList & projectSummary
+		shareList[user] += amount
+		projectSummary += amount
+		return nil, nil
+	}
 	return nil, nil
 }
 
 //Query comment
+//func getProjectName()
+//func getProjectGoal()
+//func getProjectSummary()
+//func getShareList()
+//func getProjectDeadline()
+//func getCurrentPrice()
+//func getAvailableList()
 func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("started logging in Query()")
 	switch function {
@@ -117,7 +154,22 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 			result += "****" + user + "/" + strconv.FormatFloat(value, 'E', -5, 64)
 		}
 		return []byte(result), nil //end of func getAvailableList
-
 	}
 	return nil, nil
+}
+
+func isPublic() bool {
+	if projectState == "public" {
+		return true
+	} else {
+		return false
+	}
+}
+
+func isOverGoal(amount int) bool {
+	if projectSummary+amount > projectGoal {
+		return true
+	} else {
+		return false
+	}
 }

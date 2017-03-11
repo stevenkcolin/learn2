@@ -96,33 +96,7 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		if len(args) != 2 {
 			return nil, errors.New("failed in args")
 		}
-
-		//step1 : get args
-		// user := args[0]
-		// amount, _ := strconv.Atoi(args[1])
-		// if amount <= 0 {
-		// 	return nil, errors.New("errors in args[1],it is negative")
-		// }
 		fmt.Printf("user is %v and amount is %v", args[0], args[1])
-
-		//step2 : check if the userList[user] exist
-		//if exist, then userList[user] += amount
-		//if not exists, then userList[user] = amount
-		// if shareList[user] == 0 {
-		// 	fmt.Printf("the user [%v] does not exit \n", user)
-		// 	userList = append(userList, user)
-		// 	shareList[user] = amount
-		//
-		// } else {
-		// 	fmt.Printf("the user [%v] exist", user)
-		// 	if !GoalReached() {
-		// 		shareList[user] += amount
-		// 	}
-		// }
-
-		// step3: raise amount
-
-		//// TODO: write code for pay
 		return nil, nil
 	case "checkGoalReached":
 		fmt.Println("started logging in checkGoalReached()")
@@ -138,10 +112,8 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 	case "calculateResult":
 		fmt.Println("started logging in calculateResult")
 		return nil, nil
-	default:
-		fmt.Println("no function found")
-		return nil, errors.New("no function found, recheck your function name")
 	}
+	return nil, nil
 }
 
 // Query comment
@@ -154,22 +126,6 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 			return nil, errors.New("error in getProjectName")
 		}
 		return result, nil
-	// case "getProjectState":
-	// 	fmt.Println("started logging in getProjectState()")
-	// 	if len(args) != 0 {
-	// 		return nil, errors.New("incorrect args")
-	// 	}
-	// 	result := projectName + "/"
-	// 	result += strconv.Itoa(projectRate) + "/"
-	// 	result += strconv.Itoa(projectPeriod) + "/"
-	// 	result += strconv.Itoa(projectGoal) + "/"
-	// 	result += strconv.Itoa(projectTimes) + "/"
-	// 	result += projectBenifary + "/"
-	// 	result += projectState + "/"
-	// 	result += strconv.FormatFloat(currentPrice, 'E', -1, 64) + "/"
-	// 	result += strconv.Itoa(projectSummary) + "/"
-	//
-	// 	return []byte(result), nil //end of getProjectState
 	case "getUserList":
 		fmt.Println("started logging in getUserList")
 		var result string
@@ -183,12 +139,6 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 	case "getAvailableList":
 		fmt.Println("started logging in getAvailableList")
 		return nil, nil
-	default:
-		fmt.Println("no function found")
-		return nil, errors.New("no function found, recheck your function name")
 	}
-}
-
-func GoalReached() bool {
-	return false
+	return nil, nil
 }

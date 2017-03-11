@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strconv"
@@ -56,7 +57,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 		return nil, errors.New("failed getting metadata")
 	}
 	if len(adminCert) == 0 {
-		return nil, errors.New("Invalid admin certificate. Empty.")
+		return nil, errors.New("invalid admin certificate. Empty.")
 	}
 	fmt.Printf("the administrator is [%v]", adminCert)
 	stub.PutState("admin", adminCert)
@@ -124,12 +125,10 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		if len(args) != 0 {
 			return nil, errors.New("failed in args")
 		}
-
 		// step2: check isGoalReached()
 		if isGoalReached() {
 			return nil, errors.New("goal has been reached")
 		}
-
 		// step3: get Gap between projectGoal and projectSummary
 		gap := getGoalGap()
 		if gap != 0 {
@@ -225,11 +224,14 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		return []byte(result), nil //end of func getProjectSummary()
 	case "getShareList":
 		fmt.Println("started logging in func getShareList")
-		var result string
-		for user, amount := range shareList {
-			result += "****" + user + "/" + strconv.Itoa(amount)
+		result, err := json.Marshal(shareList)
+		if err != nil {
+			return nil, errors.New("errors in getShareList()")
 		}
-		return []byte(result), nil //end of func getShareList
+		// for user, amount := range shareList {
+		// 	result += "****" + user + "/" + strconv.Itoa(amount)
+		// }
+		return result, nil //end of func getShareList
 
 	case "getProjectDeadline":
 		fmt.Println("started logging in func getProjectDeadline")

@@ -108,7 +108,10 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		// 	userList = append(userList, user)
 		// }
 		//
-		shareList[user] += amountInt
+		value := shareList[user]
+		value += amountInt
+		shareList[user] = value
+
 		projectSummary += amountInt
 		return nil, nil
 	case "checkGoalReached":

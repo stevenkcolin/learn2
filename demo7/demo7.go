@@ -186,3 +186,24 @@ func isOverGoal(amount int) bool {
 		return false
 	}
 }
+
+func isGoalReached() bool {
+	if projectSummary == projectGoal {
+		return true
+	} else {
+		return false
+	}
+}
+
+func getGoalGap() int {
+	if projectSummary >= projectGoal {
+		return 0
+	}
+	var gap int
+	gap = projectGoal - projectSummary
+	if gap < projectGoal/50 {
+		return gap
+	} else {
+		return 0
+	}
+}

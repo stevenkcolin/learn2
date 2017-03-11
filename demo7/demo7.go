@@ -154,27 +154,21 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 	case "getProjectSummary":
 		result := strconv.Itoa(projectSummary)
 		return []byte(result), nil
-	case "getUserList":
-		fmt.Println("started logging in getUserList")
-		var result string
-
-		for _, str := range userList {
-			result += str + "****"
-		}
-		return []byte(result), nil
+		// case "getUserList":
+		// 	fmt.Println("started logging in getUserList")
+		// 	var result string
+		//
+		// 	for _, str := range userList {
+		// 		result += str + "****"
+		// 	}
+		// 	return []byte(result), nil
 	case "getShareList":
-		fmt.Println("started logging in getShareList")
+		fmt.Println("started logging in getUserList")
 
 		var result string
-		var summary int
 		for user, amount := range shareList {
-			result += user + "****"
-			summary += amount
+			result += "****" + user + "/" + strconv.Itoa(amount)
 		}
-
-		fmt.Printf("the result is %v", result)
-		fmt.Printf("the summary is %v", summary)
-
 		return []byte(result), nil
 	case "getAvailableList":
 		fmt.Println("started logging in getAvailableList")

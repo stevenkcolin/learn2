@@ -21,8 +21,9 @@ var projectState string
 var currentPrice float64
 var projectSummary int
 var userList []string
-var shareList map[string]int
-var availableList map[string]int
+
+// var shareList map[string]int
+// var availableList map[string]int
 
 func main() {
 	fmt.Println("started logging in main()")
@@ -103,6 +104,8 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		if amountInt <= 0 {
 			return nil, errors.New("amount is negative")
 		}
+
+		userList = append(userList, user)
 
 		// value := shareList[user]
 		// value += amountInt

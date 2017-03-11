@@ -20,7 +20,6 @@ var projectBenifary string
 var projectState string
 var currentPrice float64
 var projectSummary int
-var userList []string
 
 var shareList map[string]int
 
@@ -37,13 +36,7 @@ func main() {
 //Init comment
 func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("started logging in Init()")
-
-	userList = append(userList, "hello1")
-	userList = append(userList, "welcome")
-
 	shareList = make(map[string]int)
-	shareList["aaa"] = 111
-	shareList["bbb"] = 222
 
 	//started to initialize the projectState
 	//step1: check whether args == 5
@@ -154,14 +147,7 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 	case "getProjectSummary":
 		result := strconv.Itoa(projectSummary)
 		return []byte(result), nil
-		// case "getUserList":
-		// 	fmt.Println("started logging in getUserList")
-		// 	var result string
-		//
-		// 	for _, str := range userList {
-		// 		result += str + "****"
-		// 	}
-		// 	return []byte(result), nil
+
 	case "getShareList":
 		fmt.Println("started logging in getUserList")
 

@@ -25,8 +25,9 @@ var projectDeadline int64
 var shareList map[string]int
 var isProjectStarted bool
 var isDue bool
+var isFinished bool
 
-// var availableList map[string]int
+var availableList map[string]float64
 
 func main() {
 	fmt.Println("started logging in main()")
@@ -40,6 +41,7 @@ func main() {
 func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("started logging in Init()")
 	shareList = make(map[string]int)
+	availableList = make(map[string]float64)
 
 	//started to initialize the projectState
 	//step1: check whether args == 5
@@ -170,11 +172,20 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 
 		isDue = true
 		return nil, nil
-	case "calculatePrice":
-		fmt.Println("started logging in calculatePrice")
-		return nil, nil
-	case "calculateResult":
-		fmt.Println("started logging in calculateResult")
+	case "checkRepay":
+		fmt.Println("started logging in checkRepay()")
+		if !isDue {
+			return nil, errors.New("the project is not dueDate, please invoke checkDueDate() first")
+		}
+		if isFinished {
+			return nil, errors.New("the project has been finished, throw errors")
+		}
+
+		for user, amount := range shareList {
+			newValue := float64(amount) * currentPrice
+			availableList[user] = newValue
+		}
+		isFinished = true
 		return nil, nil
 	default:
 		fmt.Println("no function found")
@@ -220,6 +231,14 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		fmt.Println("started logging in getCurrentPrice")
 		result := strconv.FormatFloat(currentPrice, 'E', -5, 64)
 		return []byte(result), nil
+
+	case "getAvailableList":
+		fmt.Println("started logging in getAvailableList")
+		var result string
+		for user, value := range availableList {
+			result += "****" + user + "/" + strconv.FormatFloat(value, 'E', -5, 64)
+		}
+		return []byte(result), nil //end of getAvailableList
 	}
 	return nil, nil
 }

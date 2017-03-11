@@ -160,7 +160,7 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		if isDue {
 			return nil, errors.New("dueDate can be called only once")
 		}
-		interest := float64(projectRate * projectPeriod / 365)
+		interest := float64(float64(projectRate) * float64(projectPeriod) / 365 / 100)
 		currentPrice += interest
 
 		fmt.Printf("value of projectRate is %v\n", projectRate)

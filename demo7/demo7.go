@@ -105,7 +105,7 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 			return nil, errors.New("amount is negative")
 		}
 
-		userList = append(userList, user)
+		// userList = append(userList, user)
 
 		// value := shareList[user]
 		// value += amountInt

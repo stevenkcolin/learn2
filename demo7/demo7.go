@@ -44,40 +44,37 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 
 	//step 2, intialize the project properties
 	projectName = args[0]
-	stub.PutState("projectName", projectName)
+	stub.PutState("projectName", []byte(projectName))
 
 	projectRate, _ = strconv.Atoi(args[1])
 	if projectRate <= 0 {
 		return nil, errors.New("errors in args[1], it cannot be negative")
 	}
-	stub.PutState("projectRate", projectRate)
+	stub.PutState("projectRate", []byte(args[1]))
 
 	projectPeriod, _ = strconv.Atoi(args[2])
 	if projectPeriod <= 0 {
 		return nil, errors.New("errors in args[2], it cannot be negative")
 	}
-	stub.PutState("projectPeriod", projectPeriod)
+	stub.PutState("projectPeriod", []byte(args[2]))
 
 	projectGoal, _ = strconv.Atoi(args[3])
 	if projectGoal <= 0 {
 		return nil, errors.New("errors in args[3], it cannot be negative")
 	}
-	stub.PutState("projectGoal", projectGoal)
+	stub.PutState("projectGoal", []byte(args[3]))
 
 	projectTimes = 1
-	stub.PutState("projectTimes", projectTimes)
+	stub.PutState("projectTimes", []byte(strconv.Itoa(projectTimes)))
 
 	projectBenifary = args[4]
-	stub.PutState("projectBenifary", projectBenifary)
+	stub.PutState("projectBenifary", []byte(args[4]))
 
 	projectState = "draft"
-	stub.PutState("projectState", projectState)
+	stub.PutState("projectState", []byte(projectState))
 
 	currentPrice = 1.0
-	stub.PutState("currentPrice", currentPrice)
-
 	projectSummary = 0
-	stub.PutState("projectSummary", projectSummary)
 
 	return nil, nil
 } //end of Init()

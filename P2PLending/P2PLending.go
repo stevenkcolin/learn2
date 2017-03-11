@@ -49,7 +49,19 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 		return nil, errors.New("failed in args")
 	}
 
-	//step3: initialize the project properties
+	//step3, get caller's certificate, and saved to "admin" state
+	fmt.Println("started get caller's metatdat")
+	adminCert, err := stub.GetCallerCertificate()
+	if err != nil {
+		return nil, errors.New("failed getting metadata")
+	}
+	if len(adminCert) == 0 {
+		return nil, errors.New("Invalid admin certificate. Empty.")
+	}
+	fmt.Printf("the administrator is [%v]", adminCert)
+	stub.PutState("admin", adminCert)
+
+	//step4: initialize the project properties
 	projectName = args[0]
 	projectRate, _ = strconv.Atoi(args[1])
 	if projectRate <= 0 {
@@ -236,6 +248,20 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 			result += "****" + user + "/" + strconv.FormatFloat(value, 'E', -5, 64)
 		}
 		return []byte(result), nil //end of func getAvailableList
+	case "getState":
+		fmt.Println("started in function getState()")
+		if len(args) != 1 {
+			return nil, errors.New("incorrect args")
+		}
+
+		key := args[0]
+		result, err := stub.GetState(key)
+
+		if err != nil {
+			return nil, errors.New("Failed in function getState")
+		}
+		return result, err //end of getState
+
 	default:
 		fmt.Println("no function found")
 		return nil, errors.New("no function found")

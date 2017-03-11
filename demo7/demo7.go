@@ -96,7 +96,12 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		if len(args) != 2 {
 			return nil, errors.New("failed in args")
 		}
-		fmt.Printf("user is %v and amount is %v", args[0], args[1])
+		user := args[0]
+		amount := args[1]
+		fmt.Printf("user is %v and amount is %v", user, amount)
+
+		amountInt, _ := strconv.Atoi(amount)
+		projectSummary += amountInt
 		return nil, nil
 	case "checkGoalReached":
 		fmt.Println("started logging in checkGoalReached()")
@@ -126,6 +131,15 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 			return nil, errors.New("error in getProjectName")
 		}
 		return result, nil
+	case "getProjectGoal":
+		result, err := stub.GetState("projectGoal")
+		if err != nil {
+			return nil, errors.New("error in getProjectGoal")
+		}
+		return result, nil
+	case "getProjectSummary":
+		result := strconv.Itoa(projectSummary)
+		return []byte(result), nil
 	case "getUserList":
 		fmt.Println("started logging in getUserList")
 		var result string

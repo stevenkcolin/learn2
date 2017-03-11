@@ -176,6 +176,13 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		}
 		isFinished = true
 		return nil, nil //end of "checkRepay"
+	case "goPublic":
+		fmt.Println("started logging in goPublic()")
+		if len(args) != 0 {
+			return nil, errors.New("failed in args")
+		}
+		projectState = "public"
+		return nil, nil
 	default:
 		fmt.Println("no function found")
 		return nil, errors.New("no function found")

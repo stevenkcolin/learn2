@@ -103,21 +103,22 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		if amount <= 0 {
 			return nil, errors.New("errors in args[1],it is negative")
 		}
+		fmt.Printf("user is %v and amount is %v", user, amount)
 
 		//step2 : check if the userList[user] exist
 		//if exist, then userList[user] += amount
 		//if not exists, then userList[user] = amount
-		if shareList[user] == 0 {
-			fmt.Printf("the user [%v] does not exit \n", user)
-			userList = append(userList, user)
-			shareList[user] = amount
-
-		} else {
-			fmt.Printf("the user [%v] exist", user)
-			if !GoalReached() {
-				shareList[user] += amount
-			}
-		}
+		// if shareList[user] == 0 {
+		// 	fmt.Printf("the user [%v] does not exit \n", user)
+		// 	userList = append(userList, user)
+		// 	shareList[user] = amount
+		//
+		// } else {
+		// 	fmt.Printf("the user [%v] exist", user)
+		// 	if !GoalReached() {
+		// 		shareList[user] += amount
+		// 	}
+		// }
 
 		// step3: raise amount
 

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
@@ -20,8 +21,9 @@ var projectBenifary string
 var projectState string
 var currentPrice float64
 var projectSummary int
-
+var projectDeadline int64
 var shareList map[string]int
+var isProjectStarted bool
 
 // var availableList map[string]int
 
@@ -77,6 +79,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 
 	currentPrice = 1.0
 	projectSummary = 0
+	projectDeadline = 9999999999
 
 	return nil, nil
 } //end of Init()
@@ -135,7 +138,18 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		return nil, nil
 	case "checkGoalReached":
 		fmt.Println("started logging in checkGoalReached()")
-		// TODO: write code for checkGoalReached
+		if !isGoalReached() {
+			return nil, errors.New("goal has not been reached")
+		}
+		if len(args) != 0 {
+			return nil, errors.New("failed in args")
+		}
+		if isProjectStarted {
+			return nil, errors.New("project has been started")
+		}
+
+		updateDeadline()
+		isProjectStarted = true
 		return nil, nil
 	case "checkDaoqi":
 		fmt.Println("started logging in checkDaoqi()")
@@ -181,9 +195,11 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 			result += "****" + user + "/" + strconv.Itoa(amount)
 		}
 		return []byte(result), nil
-	case "getAvailableList":
-		fmt.Println("started logging in getAvailableList")
-		return nil, nil
+
+	case "getProjectDeadline":
+		fmt.Println("started logging in getProjectDeadline")
+		result := strconv.Itoa(int(projectDeadline))
+		return []byte(result), nil
 	}
 	return nil, nil
 }
@@ -223,4 +239,13 @@ func getGoalGap() int {
 	} else {
 		return 0
 	}
+}
+
+func updateDeadline() {
+	now := time.Now().Unix()
+	fmt.Printf("now is%v\n", now)
+
+	day := projectPeriod
+	projectDeadline = time.Now().AddDate(0, 0, day).Unix()
+	fmt.Printf("deadline is %v\n", projectDeadline)
 }

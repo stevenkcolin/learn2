@@ -25,6 +25,7 @@ var isFinished bool
 
 var availableList map[string]float64
 
+//SimpleChaincode comment
 type SimpleChaincode struct {
 }
 
@@ -102,7 +103,28 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		// step 5: putdata into shareList & projectSummary
 		shareList[user] += amount
 		projectSummary += amount
-		return nil, nil
+		return nil, nil //end of func pay()
+
+	case "autoPay":
+		fmt.Println("started logging in autoPay")
+		// step1: check len(args) ==0
+		if len(args) != 0 {
+			return nil, errors.New("failed in args")
+		}
+
+		// step2: check isGoalReached()
+		if isGoalReached() {
+			return nil, errors.New("goal has been reached")
+		}
+
+		// step3: get Gap between projectGoal and projectSummary
+		gap := getGoalGap()
+		if gap != 0 {
+			fmt.Printf("admin pay, admin pay the value %v\n", gap)
+			shareList["admin"] = gap
+			projectSummary += gap
+		}
+		return nil, nil //end of func autoPay()
 	}
 	return nil, nil
 }
@@ -161,15 +183,35 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 func isPublic() bool {
 	if projectState == "public" {
 		return true
-	} else {
-		return false
 	}
+	return false
+
 }
 
 func isOverGoal(amount int) bool {
 	if projectSummary+amount > projectGoal {
 		return true
-	} else {
-		return false
 	}
+	return false
+
+}
+
+func isGoalReached() bool {
+	if projectSummary >= projectGoal {
+		return true
+	}
+	return false
+
+}
+
+func getGoalGap() int {
+	if projectSummary >= projectGoal {
+		return 0
+	}
+	var gap int
+	gap = projectGoal - projectSummary
+	if gap < projectGoal/50 {
+		return gap
+	}
+	return 0
 }

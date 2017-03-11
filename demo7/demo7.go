@@ -94,6 +94,9 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		return nil, nil //end of goPublic
 	case "pay":
 		fmt.Println("started logging in pay()")
+		if !isPublic() {
+			return nil, errors.New("current state is not public, function pay() failed")
+		}
 
 		if len(args) != 2 {
 			return nil, errors.New("failed in args")
@@ -161,4 +164,12 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		return nil, nil
 	}
 	return nil, nil
+}
+
+func isPublic() bool {
+	if projectState == "public" {
+		return true
+	} else {
+		return false
+	}
 }

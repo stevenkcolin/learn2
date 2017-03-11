@@ -20,7 +20,8 @@ var projectBenifary string
 var projectState string
 var currentPrice float64
 var projectSummary int
-var userList []string
+
+// var userList []string
 
 // var shareList map[string]int
 // var availableList map[string]int
@@ -153,8 +154,8 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 	case "getUserList":
 		fmt.Println("started logging in getUserList")
 		var result string
-		for i, value := range userList {
-			result += fmt.Sprintf("userList[%v] is %v ****", strconv.Itoa(i), value)
+		for i := 0; i < 5; i++ {
+			result += strconv.Itoa(i) + "****"
 		}
 		return []byte(result), nil
 	case "getShareList":

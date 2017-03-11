@@ -108,6 +108,9 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		if amountInt <= 0 {
 			return nil, errors.New("amount is negative")
 		}
+		if isOverGoal(amountInt) {
+			return nil, errors.New("projectSummary + amount is over goal")
+		}
 
 		shareList[user] += amountInt
 
@@ -170,6 +173,14 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 
 func isPublic() bool {
 	if projectState == "public" {
+		return true
+	} else {
+		return false
+	}
+}
+
+func isOverGoal(amount int) bool {
+	if projectSummary+amount > projectGoal {
 		return true
 	} else {
 		return false

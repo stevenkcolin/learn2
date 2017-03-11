@@ -44,26 +44,40 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 
 	//step 2, intialize the project properties
 	projectName = args[0]
+	stub.PutState("projectName", projectName)
+
 	projectRate, _ = strconv.Atoi(args[1])
 	if projectRate <= 0 {
 		return nil, errors.New("errors in args[1], it cannot be negative")
 	}
+	stub.PutState("projectRate", projectRate)
 
 	projectPeriod, _ = strconv.Atoi(args[2])
 	if projectPeriod <= 0 {
 		return nil, errors.New("errors in args[2], it cannot be negative")
 	}
+	stub.PutState("projectPeriod", projectPeriod)
 
 	projectGoal, _ = strconv.Atoi(args[3])
 	if projectGoal <= 0 {
 		return nil, errors.New("errors in args[3], it cannot be negative")
 	}
+	stub.PutState("projectGoal", projectGoal)
 
 	projectTimes = 1
+	stub.PutState("projectTimes", projectTimes)
+
 	projectBenifary = args[4]
+	stub.PutState("projectBenifary", projectBenifary)
+
 	projectState = "draft"
+	stub.PutState("projectState", projectState)
+
 	currentPrice = 1.0
+	stub.PutState("currentPrice", currentPrice)
+
 	projectSummary = 0
+	stub.PutState("projectSummary", projectSummary)
 
 	return nil, nil
 } //end of Init()
@@ -85,6 +99,7 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		if len(args) != 2 {
 			return nil, errors.New("failed in args")
 		}
+
 		//step1 : get args
 		user := args[0]
 		amount, _ := strconv.Atoi(args[1])
@@ -135,22 +150,25 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("started logging in Query()")
 	switch function {
-	case "getProjectState":
-		fmt.Println("started logging in getProjectState()")
-		if len(args) != 0 {
-			return nil, errors.New("incorrect args")
-		}
-		result := projectName + "/"
-		result += strconv.Itoa(projectRate) + "/"
-		result += strconv.Itoa(projectPeriod) + "/"
-		result += strconv.Itoa(projectGoal) + "/"
-		result += strconv.Itoa(projectTimes) + "/"
-		result += projectBenifary + "/"
-		result += projectState + "/"
-		result += strconv.FormatFloat(currentPrice, 'E', -1, 64) + "/"
-		result += strconv.Itoa(projectSummary) + "/"
-
-		return []byte(result), nil //end of getProjectState
+	case "getProjectName":
+		result := stub.GetState("projectName")
+		return []byte(result), nil
+	// case "getProjectState":
+	// 	fmt.Println("started logging in getProjectState()")
+	// 	if len(args) != 0 {
+	// 		return nil, errors.New("incorrect args")
+	// 	}
+	// 	result := projectName + "/"
+	// 	result += strconv.Itoa(projectRate) + "/"
+	// 	result += strconv.Itoa(projectPeriod) + "/"
+	// 	result += strconv.Itoa(projectGoal) + "/"
+	// 	result += strconv.Itoa(projectTimes) + "/"
+	// 	result += projectBenifary + "/"
+	// 	result += projectState + "/"
+	// 	result += strconv.FormatFloat(currentPrice, 'E', -1, 64) + "/"
+	// 	result += strconv.Itoa(projectSummary) + "/"
+	//
+	// 	return []byte(result), nil //end of getProjectState
 	case "getUserList":
 		fmt.Println("started logging in getUserList")
 		var result string

@@ -228,9 +228,6 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		if err != nil {
 			return nil, errors.New("errors in getShareList()")
 		}
-		// for user, amount := range shareList {
-		// 	result += "****" + user + "/" + strconv.Itoa(amount)
-		// }
 		return result, nil //end of func getShareList
 
 	case "getProjectDeadline":
@@ -245,11 +242,11 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 
 	case "getAvailableList":
 		fmt.Println("started logging in func getAvailableList")
-		var result string
-		for user, value := range availableList {
-			result += "****" + user + "/" + strconv.FormatFloat(value, 'E', -5, 64)
+		result, err := json.Marshal(availableList)
+		if err != nil {
+			return nil, errors.New("errors in getShareList()")
 		}
-		return []byte(result), nil //end of func getAvailableList
+		return result, nil //end of func getAvailableList
 	case "getState":
 		fmt.Println("started in function getState()")
 		if len(args) != 1 {

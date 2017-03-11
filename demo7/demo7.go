@@ -113,6 +113,8 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 			return nil, errors.New("amount is negative")
 		}
 
+		shareList[user] += amountInt
+
 		projectSummary += amountInt
 		return nil, nil
 	case "checkGoalReached":

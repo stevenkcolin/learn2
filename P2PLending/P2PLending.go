@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
@@ -125,8 +126,60 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 			projectSummary += gap
 		}
 		return nil, nil //end of func autoPay()
+	case "checkGoalReached":
+		fmt.Println("started logging in checkGoalReached()")
+		//step1: check len(args) ==0
+		if len(args) != 0 {
+			return nil, errors.New("failed in args")
+		}
+		//step2: check isGoalReached()
+		if !isGoalReached() {
+			return nil, errors.New("goal has not been reached")
+		}
+		// step3
+		updateDeadline()
+		isProjectStarted = true
+		return nil, nil //end of checkGoalReached()
+
+	case "checkDueDate":
+		fmt.Println("started logging in checkDueDate()")
+		if len(args) != 0 {
+			return nil, errors.New("failed in args")
+		}
+		if !isDueDate() {
+			return nil, errors.New("due date is wrong")
+		}
+		if isDue {
+			return nil, errors.New("dueDate can be called only once")
+		} //avoid interest is calculated multiple;
+
+		interest := float64(float64(projectRate) * float64(projectPeriod) / 365 / 100)
+		currentPrice += interest
+		isDue = true
+		return nil, nil //end of checkDueDate;
+
+	case "checkRepay":
+		fmt.Println("started logging in checkRepay()")
+		if len(args) != 0 {
+			return nil, errors.New("failed in args")
+		}
+		if !isDue {
+			return nil, errors.New("the project is not dueDate, please invoke checkDueDate() first")
+		}
+		if isFinished {
+			return nil, errors.New("the project has been finished, throw errors")
+		} //avoid to be invoked twice;
+
+		for user, amount := range shareList {
+			newValue := float64(amount) * currentPrice
+			availableList[user] = newValue
+		}
+		isFinished = true
+		return nil, nil //end of "checkRepay"
+	default:
+		fmt.Println("no function found")
+		return nil, errors.New("no function found")
 	}
-	return nil, nil
 }
 
 //Query comment
@@ -176,8 +229,11 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 			result += "****" + user + "/" + strconv.FormatFloat(value, 'E', -5, 64)
 		}
 		return []byte(result), nil //end of func getAvailableList
+	default:
+		fmt.Println("no function found")
+		return nil, errors.New("no function found")
 	}
-	return nil, nil
+
 }
 
 func isPublic() bool {
@@ -214,4 +270,25 @@ func getGoalGap() int {
 		return gap
 	}
 	return 0
+}
+
+func updateDeadline() {
+	now := time.Now().Unix()
+	fmt.Printf("now is%v\n", now)
+
+	day := projectPeriod
+	projectDeadline = time.Now().AddDate(0, 0, day).Unix()
+	fmt.Printf("deadline is %v\n", projectDeadline)
+}
+
+func isDueDate() bool {
+	// 正常代码，检查当前时间是否大于最后期限
+	// now := time.Now().Unix()
+	// if now >= projectDeadline {
+	// 	return true;
+	// } else {
+	// 	return false;
+	// }
+	//为了测试所用，永远返回true，
+	return true
 }

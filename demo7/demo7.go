@@ -151,8 +151,11 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 	fmt.Println("started logging in Query()")
 	switch function {
 	case "getProjectName":
-		result := stub.GetState("projectName")
-		return []byte(result), nil
+		result, err := stub.GetState("projectName")
+		if err != nil {
+			return nil, errors.New("error in getProjectName")
+		}
+		return result, nil
 	// case "getProjectState":
 	// 	fmt.Println("started logging in getProjectState()")
 	// 	if len(args) != 0 {

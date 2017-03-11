@@ -72,7 +72,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	projectBenifary = args[4]
 	stub.PutState("projectBenifary", []byte(args[4]))
 
-	projectState = "draft"
+	projectState = "public"
 	stub.PutState("projectState", []byte(projectState))
 
 	currentPrice = 1.0
@@ -95,7 +95,7 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 	case "pay":
 		fmt.Println("started logging in pay()")
 		if !isPublic() {
-			return []byte("error"), errors.New("current state is not public, function pay() failed")
+			return nil, errors.New("current state is not public, function pay() failed")
 		}
 
 		if len(args) != 2 {

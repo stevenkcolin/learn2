@@ -24,6 +24,7 @@ var projectSummary int
 var projectDeadline int64
 var shareList map[string]int
 var isProjectStarted bool
+var isDue bool
 
 // var availableList map[string]int
 
@@ -156,8 +157,18 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		if !isDueDate() {
 			return nil, errors.New("due date is wrong")
 		}
+		if isDue {
+			return nil, errors.New("dueDate can be called only once")
+		}
+		interest := float64(projectRate * projectPeriod / 365)
+		currentPrice += interest
 
-		currentPrice += float64(projectRate * projectPeriod / 365)
+		fmt.Printf("value of projectRate is %v\n", projectRate)
+		fmt.Printf("value of projectPeriod is %v\n", projectPeriod)
+		fmt.Printf("value of interest is %v\n", interest)
+		fmt.Printf("value of current price is %v\n", currentPrice)
+
+		isDue = true
 		return nil, nil
 	case "calculatePrice":
 		fmt.Println("started logging in calculatePrice")

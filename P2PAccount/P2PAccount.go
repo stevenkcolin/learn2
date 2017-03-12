@@ -13,6 +13,7 @@ type SimpleChaincode struct {
 }
 
 var balancesOf map[string]float64
+var defaultBalances float64
 
 func main() {
 	fmt.Println("started logging in func main()")
@@ -29,6 +30,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 		return nil, errors.New("errors in args")
 	}
 	balancesOf = make(map[string]float64)
+	defaultBalances = 1.0
 	balancesOf["admin"] = 10000.0
 	return nil, nil
 }
@@ -50,8 +52,36 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 			return nil, errors.New("errors in args[0], it cannot be zero or negative")
 		}
 		balancesOf["admin"] += amount
-		return nil, nil
-	}
+		return nil, nil //end of mint()
+	case "newAccount":
+		fmt.Println("started logging in func NewAccount()")
+		if len(args) != 1 {
+			return nil, errors.New("error in args")
+		}
+		user := args[0]
+		if balancesOf[user] != 0 {
+			return nil, errors.New("user exists")
+		}
+		balancesOf[user] = defaultBalances
+		return nil, nil //end of newAccount
+	case "transfer":
+		fmt.Println("started logging in func transfer()")
+		if len(args) != 2 {
+			return nil, errors.New("error in args")
+		}
+
+		user := args[0]
+		amount, _ := strconv.ParseFloat(args[1], 64)
+
+		valueOfAdmin := balancesOf["admin"]
+		if amount > valueOfAdmin {
+			return nil, errors.New("amount is too large, you need to mint more to admin account")
+		}
+		balancesOf["admin"] -= amount
+		balancesOf[user] += amount
+		return nil, nil //end of transfer
+	} //end of switch
+
 	return nil, nil
 }
 

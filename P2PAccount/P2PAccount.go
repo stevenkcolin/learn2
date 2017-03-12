@@ -71,6 +71,9 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		}
 
 		user := args[0]
+		if balancesOf[user] == 0 {
+			return nil, errors.New("account does not exist, need to create account first")
+		}
 		amount, _ := strconv.ParseFloat(args[1], 64)
 
 		valueOfAdmin := balancesOf["admin"]
